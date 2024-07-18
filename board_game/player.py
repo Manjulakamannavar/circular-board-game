@@ -1,10 +1,10 @@
 class Player:
     def __init__(self, name):
         self.name = name
-        self.position = 0
         self.balance = 5
         self.debt = 0
-        self.miss_turn = False
+        self.position = 0  # Start position on the board
+        self.miss_turn = False  # Flag to skip next turn if on Jail square
 
     def update_balance(self, amount):
         self.balance += amount
@@ -16,4 +16,4 @@ class Player:
         self.position = (self.position + steps) % board_size
 
     def __str__(self):
-        return f"{self.name}: Position={self.position}, Balance={self.balance}, Debt={self.debt}, MissTurn={self.miss_turn}"
+        return f"{self.name}: Balance - {self.balance}, Debt - {self.debt}"

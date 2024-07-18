@@ -2,7 +2,6 @@ from player import Player
 from board import Board
 from dice import LoadedDice
 
-
 class Game:
     def __init__(self, board_layout, player_names):
         self.board = Board(board_layout)
@@ -19,9 +18,6 @@ class Game:
             return
 
         roll_result = self.dice.roll()
-        while roll_result == 'Roll Again':
-            roll_result = self.dice.roll()
-
         player.move(roll_result, len(self.board.layout))
         square_type = self.board.get_square_type(player.position)
 
@@ -31,13 +27,15 @@ class Game:
         self.current_player_index = (self.current_player_index + 1) % len(self.players)
 
     def handle_square(self, square_type, player):
-        if square_type == 'B':
+        if square_type == 'B':  # Bank
             player.update_balance(10)
-            # Handle loan and repayment options
-        elif square_type == 'J':
+            # Player can take loan or repay (assumed functionality)
+
+        elif square_type == 'J':  # Jail
             player.update_balance(-20)
             player.miss_turn = True
-        elif square_type == 'H':
+
+        elif square_type == 'H':  # House
             if player.balance > 0:
                 player.update_balance(2)
             else:
@@ -46,13 +44,14 @@ class Game:
                 player.update_debt(1)
 
     def check_win_condition(self, player):
-        if player.balance - player.debt > 100:
-            print(f"{player.name} wins!")
-            exit()
         for opponent in self.players:
-            if opponent != player and opponent.debt - opponent.balance > 100:
-                print(f"{player.name} wins because {opponent.name} has too much debt!")
-                exit()
+            if opponent != player:
+                if player.balance - player.debt > 100:
+                    print(f"{player.name} wins!")
+                    exit()
+                elif opponent.debt - opponent.balance > 100:
+                    print(f"{player.name} wins because {opponent.name} has too much debt!")
+                    exit()
 
     def display_board(self):
         for i, square in enumerate(self.board.layout):
